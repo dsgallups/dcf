@@ -28,6 +28,9 @@ impl<'a> Collector<'a> {
     pub fn arr_end(&mut self) {
         self.fields.push(FieldValue::ArrayEnd);
     }
+    pub fn finish(self) -> Vec<u8> {
+        todo!()
+    }
 }
 
 enum FieldValue<'a> {
