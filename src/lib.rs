@@ -3,24 +3,39 @@ Assumptions:
 - I can use proc macros
 "#]
 
-use std::{borrow::Cow, marker::PhantomData};
+use std::borrow::Cow;
 
-pub trait IntoFieldIter<'a> {
-    fn field_iter(self) -> FieldIter<'a>;
+pub trait Fields<'a, M = ()> {
+    fn dump(self, collector: &mut Collector<'a>);
+    //todo: would probably want to pop off one by one using a byte slice
+    //fn from_field_iter(iter: FieldIter<'a>) -> Self;
 }
 
 #[derive(Default)]
-pub struct FieldIter<'a> {
+pub struct Collector<'a> {
     fields: Vec<FieldValue<'a>>,
 }
-impl<'a> FieldIter<'a> {
+impl<'a> Collector<'a> {
     pub fn new(cap: usize) -> Self {
         Self {
             fields: Vec::with_capacity(cap),
         }
     }
-    pub fn push(&mut self, value: impl Into<FieldValue<'a>>) -> &mut Self {
-        todo!()
+
+    pub fn bool(&mut self, value: bool) {
+        self.fields.push(FieldValue::Bool(value));
+    }
+    pub fn number(&mut self, number: i128) {
+        self.fields.push(FieldValue::Number(number))
+    }
+    pub fn string(&mut self, val: impl Into<Cow<'a, str>>) {
+        self.fields.push(FieldValue::String(val.into()))
+    }
+    pub fn arr_start(&mut self) {
+        self.fields.push(FieldValue::ArrayStart);
+    }
+    pub fn arr_end(&mut self) {
+        self.fields.push(FieldValue::ArrayEnd);
     }
 }
 
@@ -28,34 +43,42 @@ pub enum FieldValue<'a> {
     String(Cow<'a, str>),
     Bool(bool),
     Number(i128),
-    Array(Vec<FieldValue<'a>>),
+    ArrayStart,
+    ArrayEnd,
 }
 
-impl<'a> From<u32> for FieldValue<'a> {
-    fn from(value: u32) -> Self {
-        Self::Number(value as i128)
+impl<'a> Fields<'a> for bool {
+    fn dump(self, collector: &mut Collector<'a>) {
+        collector.bool(self)
     }
 }
 
-impl<'a> From<bool> for FieldValue<'a> {
-    fn from(value: bool) -> Self {
-        Self::Bool(value)
+impl<'a> Fields<'a> for u8 {
+    fn dump(self, collector: &mut Collector<'a>) {
+        collector.number(self as i128);
     }
 }
-impl<'a> From<&'a str> for FieldValue<'a> {
-    fn from(value: &'a str) -> Self {
-        Self::String(Cow::Borrowed(value))
+impl<'a> Fields<'a> for u32 {
+    fn dump(self, collector: &mut Collector<'a>) {
+        collector.number(self as i128);
+    }
+}
+impl<'a> Fields<'a> for String {
+    fn dump(self, collector: &mut Collector<'a>) {
+        collector.string(self);
     }
 }
 
-impl<'a> From<&'a String> for FieldValue<'a> {
-    fn from(value: &'a String) -> Self {
-        Self::String(Cow::Borrowed(value.as_str()))
-    }
-}
+pub struct IterField;
 
-impl<'a> From<String> for FieldValue<'a> {
-    fn from(value: String) -> Self {
-        Self::String(Cow::Owned(value))
+impl<'a, I, T> Fields<'a, IterField> for I
+where
+    I: IntoIterator<Item = T>,
+    T: Fields<'a>,
+{
+    fn dump(self, collector: &mut Collector<'a>) {
+        collector.arr_start();
+
+        collector.arr_end();
     }
 }

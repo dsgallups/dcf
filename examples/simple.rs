@@ -4,18 +4,15 @@ pub struct SimpleStruct {
     val_one: bool,
     val_two: u32,
     val_three: String,
+    val_four: Vec<u8>,
 }
 
-impl<'a> IntoFieldIter<'a> for SimpleStruct {
-    fn field_iter(self) -> FieldIter<'a> {
-        let mut field_iter = FieldIter::new(3);
-
-        field_iter
-            .push(self.val_one)
-            .push(self.val_two)
-            .push(self.val_three);
-
-        field_iter
+impl<'a> Fields<'a> for SimpleStruct {
+    fn dump(self, collector: &mut Collector<'a>) {
+        self.val_one.dump(collector);
+        self.val_two.dump(collector);
+        self.val_three.dump(collector);
+        self.val_four.dump(collector);
     }
 }
 
