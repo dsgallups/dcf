@@ -16,4 +16,12 @@ impl<'a> Fields<'a> for SimpleStruct {
     }
 }
 
-fn main() {}
+fn main() {
+    let simple_struct = SimpleStruct {
+        val_one: false,
+        val_two: 182,
+        val_three: "yoyo".to_string(),
+        val_four: vec![2, 2, 1, 3],
+    };
+    let bytes = dcf::serialize(&simple_struct);
+}

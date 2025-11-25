@@ -29,7 +29,13 @@ impl<'a> Collector<'a> {
         self.fields.push(FieldValue::ArrayEnd);
     }
     pub fn finish(self) -> Vec<u8> {
-        todo!()
+        let mut result = Vec::new();
+
+        for field in self.fields {
+            field.into_bytes(&mut result);
+        }
+
+        result
     }
 }
 
@@ -39,4 +45,27 @@ enum FieldValue<'a> {
     Number(i128),
     ArrayStart,
     ArrayEnd,
+}
+
+impl<'a> FieldValue<'a> {
+    fn into_bytes(self, bytes: &mut Vec<u8>) {
+        match self {
+            FieldValue::Bool(value) => {
+                bytes.push(value as u8);
+            }
+            FieldValue::Number(num) => {
+                bytes.extend(num.to_be_bytes());
+            }
+            FieldValue::String(val) => {
+                bytes.extend(val.as_bytes());
+            }
+            FieldValue::ArrayStart => {
+                bytes.push(b'[');
+            }
+            FieldValue::ArrayEnd => {
+                // we will perform escaping in a bit
+                bytes.push(b']');
+            }
+        }
+    }
 }
