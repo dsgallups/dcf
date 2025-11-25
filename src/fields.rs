@@ -1,7 +1,14 @@
-use crate::Collector;
+use crate::*;
 
 pub trait Fields<'a, M = ()> {
     fn dump(&self, collector: &mut Collector<'a>);
+
+    fn collect(&self, dumper: &mut Dumper<'a>) -> Result<Self>
+    where
+        Self: Sized,
+    {
+        todo!()
+    }
     //todo: would probably want to pop off one by one using a byte slice
     //fn from_field_iter(iter: FieldIter<'a>) -> Self;
 }
@@ -15,6 +22,13 @@ impl<'a> Fields<'a> for bool {
 impl<'a> Fields<'a> for u8 {
     fn dump(&self, collector: &mut Collector<'a>) {
         collector.number(*self as i128);
+    }
+    fn collect(&self, dumper: &mut Dumper<'a>) -> Result<Self>
+    where
+        Self: Sized,
+    {
+        let byte = dumper.dump::<Self>()?;
+        todo!()
     }
 }
 impl<'a> Fields<'a> for u32 {

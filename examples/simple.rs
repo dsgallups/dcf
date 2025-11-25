@@ -24,4 +24,6 @@ fn main() {
         val_four: vec![2, 2, 1, 3],
     };
     let bytes = dcf::serialize(&simple_struct);
+
+    let struct_copy: SimpleStruct = dcf::deserialize(&bytes).unwrap();
 }
