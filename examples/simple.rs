@@ -1,18 +1,21 @@
 use dcf::*;
 
 pub struct SimpleStruct {
-    value: bool,
+    val_one: bool,
+    val_two: u32,
+    val_three: String,
 }
 
-impl<'a> Dcf<'a> for SimpleStruct {
-    fn serialize(&self) -> Vec<u8> {
-        todo!()
-    }
-    fn deserialize(bytes: &'a [u8]) -> Self
-    where
-        Self: 'a,
-    {
-        todo!()
+impl<'a> IntoFieldIter<'a> for SimpleStruct {
+    fn field_iter(&'a self) -> FieldIter<'a> {
+        let mut field_iter = FieldIter::new(3);
+
+        field_iter
+            .push(&self.val_one)
+            .push(&self.val_two)
+            .push(&self.val_three);
+
+        field_iter
     }
 }
 
