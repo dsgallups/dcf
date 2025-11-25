@@ -1,7 +1,12 @@
-use std::marker::PhantomData;
+#![doc = r#"
+Assumptions:
+- I can use proc macros
+"#]
+
+use std::{borrow::Cow, marker::PhantomData};
 
 pub trait IntoFieldIter<'a> {
-    fn field_iter(&'a self) -> FieldIter<'a>;
+    fn field_iter(self) -> FieldIter<'a>;
 }
 
 #[derive(Default)]
@@ -20,31 +25,37 @@ impl<'a> FieldIter<'a> {
 }
 
 pub enum FieldValue<'a> {
-    String(&'a str),
+    String(Cow<'a, str>),
     Bool(bool),
     Number(i128),
     Array(Vec<FieldValue<'a>>),
 }
 
-impl<'a> From<&'a u32> for FieldValue<'a> {
-    fn from(value: &'a u32) -> Self {
-        Self::Number(*value as i128)
+impl<'a> From<u32> for FieldValue<'a> {
+    fn from(value: u32) -> Self {
+        Self::Number(value as i128)
     }
 }
 
-impl<'a> From<&'a bool> for FieldValue<'a> {
-    fn from(value: &'a bool) -> Self {
-        Self::Bool(*value)
+impl<'a> From<bool> for FieldValue<'a> {
+    fn from(value: bool) -> Self {
+        Self::Bool(value)
     }
 }
 impl<'a> From<&'a str> for FieldValue<'a> {
     fn from(value: &'a str) -> Self {
-        Self::String(value)
+        Self::String(Cow::Borrowed(value))
     }
 }
 
 impl<'a> From<&'a String> for FieldValue<'a> {
     fn from(value: &'a String) -> Self {
-        Self::String(value.as_str())
+        Self::String(Cow::Borrowed(value.as_str()))
+    }
+}
+
+impl<'a> From<String> for FieldValue<'a> {
+    fn from(value: String) -> Self {
+        Self::String(Cow::Owned(value))
     }
 }

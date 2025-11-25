@@ -7,13 +7,13 @@ pub struct SimpleStruct {
 }
 
 impl<'a> IntoFieldIter<'a> for SimpleStruct {
-    fn field_iter(&'a self) -> FieldIter<'a> {
+    fn field_iter(self) -> FieldIter<'a> {
         let mut field_iter = FieldIter::new(3);
 
         field_iter
-            .push(&self.val_one)
-            .push(&self.val_two)
-            .push(&self.val_three);
+            .push(self.val_one)
+            .push(self.val_two)
+            .push(self.val_three);
 
         field_iter
     }
