@@ -6,7 +6,7 @@ Assumptions:
 use std::borrow::Cow;
 
 pub trait Fields<'a, M = ()> {
-    fn dump(self, collector: &mut Collector<'a>);
+    fn dump(&self, collector: &mut Collector<'a>);
     //todo: would probably want to pop off one by one using a byte slice
     //fn from_field_iter(iter: FieldIter<'a>) -> Self;
 }
@@ -28,7 +28,9 @@ impl<'a> Collector<'a> {
     pub fn number(&mut self, number: i128) {
         self.fields.push(FieldValue::Number(number))
     }
-    pub fn string(&mut self, val: impl Into<Cow<'a, str>>) {
+    pub fn string(&mut self, val: &str) {
+        //ill deal with you later
+        let val = val.to_string();
         self.fields.push(FieldValue::String(val.into()))
     }
     pub fn arr_start(&mut self) {
@@ -48,24 +50,31 @@ pub enum FieldValue<'a> {
 }
 
 impl<'a> Fields<'a> for bool {
-    fn dump(self, collector: &mut Collector<'a>) {
-        collector.bool(self)
+    fn dump(&self, collector: &mut Collector<'a>) {
+        collector.bool(*self)
     }
 }
 
 impl<'a> Fields<'a> for u8 {
-    fn dump(self, collector: &mut Collector<'a>) {
-        collector.number(self as i128);
+    fn dump(&self, collector: &mut Collector<'a>) {
+        collector.number(*self as i128);
     }
 }
 impl<'a> Fields<'a> for u32 {
-    fn dump(self, collector: &mut Collector<'a>) {
-        collector.number(self as i128);
+    fn dump(&self, collector: &mut Collector<'a>) {
+        collector.number(*self as i128);
     }
 }
-impl<'a> Fields<'a> for String {
-    fn dump(self, collector: &mut Collector<'a>) {
-        collector.string(self);
+
+pub struct StringType;
+
+impl<'a, S> Fields<'a, StringType> for S
+where
+    S: AsRef<str>,
+{
+    fn dump(&self, collector: &mut Collector<'a>) {
+        let val: &str = self.as_ref();
+        collector.string(val);
     }
 }
 
@@ -76,7 +85,7 @@ where
     I: IntoIterator<Item = T>,
     T: Fields<'a>,
 {
-    fn dump(self, collector: &mut Collector<'a>) {
+    fn dump(&self, collector: &mut Collector<'a>) {
         collector.arr_start();
 
         collector.arr_end();
