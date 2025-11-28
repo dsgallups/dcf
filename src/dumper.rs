@@ -11,6 +11,16 @@ impl<'a> Dumper<'a> {
             inner: bytes,
         }
     }
+    pub fn dump_bool(&mut self) -> Result<bool> {
+        let value = self.inner[self.cursor];
+
+        self.cursor += 1;
+        Ok(value != 0)
+    }
+    pub fn dump_str(&mut self) -> Result<String> {
+        todo!()
+    }
+
     pub fn dump<T>(&mut self) -> Result<T> {
         todo!()
     }

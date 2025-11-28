@@ -3,7 +3,7 @@ use crate::*;
 pub trait Fields<'a, M = ()> {
     fn dump(&self, collector: &mut Collector<'a>);
 
-    fn collect(&self, dumper: &mut Dumper<'a>) -> Result<Self>
+    fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
     where
         Self: Sized,
     {
@@ -23,7 +23,7 @@ impl<'a> Fields<'a> for u8 {
     fn dump(&self, collector: &mut Collector<'a>) {
         collector.number(*self as i128);
     }
-    fn collect(&self, dumper: &mut Dumper<'a>) -> Result<Self>
+    fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
     where
         Self: Sized,
     {

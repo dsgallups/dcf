@@ -22,5 +22,6 @@ pub fn serialize<'a, S: Fields<'a>>(value: &S) -> Vec<u8> {
 }
 
 pub fn deserialize<'a, S: Fields<'a>>(bytes: &'a [u8]) -> Result<S> {
-    todo!()
+    let mut dumper = Dumper::new(bytes);
+    S::collect(&mut dumper)
 }
