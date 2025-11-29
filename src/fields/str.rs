@@ -25,5 +25,9 @@ impl<'a> Deserialize<'a> for String {
     }
 }
 
-// #[cfg(test)]
-// fn
+#[test]
+fn test_strings() {
+    for value in ["", "one", "two", "iowe and a space", "\0 lol"] {
+        utils::test_serde(value.to_string());
+    }
+}
