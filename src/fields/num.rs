@@ -14,7 +14,24 @@ impl<'a> Deserialize<'a> for i128 {
     where
         Self: Sized,
     {
-        todo!()
+        let mut zigzag = 0;
+        let mut shift = 0;
+
+        loop {
+            let byte = dumper.dump_byte()?;
+
+            zigzag |= ((byte & 0x7F) as u128) << shift;
+            if byte & 0x80 == 0 {
+                break;
+            }
+            shift += 7;
+            if shift >= 128 {
+                bail!("Varint too large");
+            }
+        }
+
+        let result = ((zigzag >> 1) as i128) ^ -((zigzag & 1) as i128);
+        Ok(result)
     }
 }
 

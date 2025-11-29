@@ -16,6 +16,18 @@ impl Serialize for SimpleStruct {
     }
 }
 
+impl<'a> Deserialize<'a> for SimpleStruct {
+    fn collect(dumper: &mut Reader<'a>) -> Result<Self>
+    where
+        Self: Sized,
+    {
+        let val_one = dumper.dump::<bool>()?;
+        let val_two = dumper.dump::<u32>()?;
+        //let val_three = dumper.dump::<String>()?;
+        todo!()
+    }
+}
+
 fn main() {
     let simple_struct = SimpleStruct {
         val_one: false,
@@ -25,5 +37,5 @@ fn main() {
     };
     let bytes = dcf::serialize(simple_struct);
 
-    //let struct_copy: SimpleStruct = dcf::deserialize(&bytes).unwrap();
+    let struct_copy: SimpleStruct = dcf::deserialize(&bytes).unwrap();
 }

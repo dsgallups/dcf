@@ -19,7 +19,7 @@ pub use writer::*;
 
 pub(crate) use fields::utils;
 
-pub use anyhow::Result;
+pub use anyhow::{Result, bail};
 
 pub fn serialize<S: Serialize>(value: S) -> Vec<u8> {
     let mut collector = Writer::default();
