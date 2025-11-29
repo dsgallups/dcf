@@ -43,7 +43,16 @@ impl SimpleStruct {
 #[test]
 fn test_simple_struct() {
     let val = SimpleStruct::new(false, 1823, "oiwejoi");
-    test_serde(val);
+
+    let varint = crate::to_dcf(&val);
+    println!("Writer Values:");
+    print!("[");
+    for value in &varint {
+        print!("{value:08b} ");
+    }
+    let decode: SimpleStruct = crate::from_dcf(&varint).unwrap();
+
+    assert_eq!(val, decode);
 }
 
 #[test]
