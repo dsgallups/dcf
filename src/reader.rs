@@ -19,14 +19,16 @@ impl<'a> Reader<'a> {
         self.cursor += len;
         Ok(slice)
     }
+    /// Dumps the next byte, assuming that it is not packed.
     pub fn dump_byte(&mut self) -> Result<u8> {
-        if self.cursor >= self.bytes.len() {
-            bail!("Unexpected end of buffer");
-        }
-        let value = self.bytes[self.cursor];
+        self.dump_packed_bits(8)
+        // if self.cursor >= self.bytes.len() {
+        //     bail!("Unexpected end of buffer");
+        // }
+        // let value = self.bytes[self.cursor];
 
-        self.cursor += 1;
-        Ok(value)
+        // self.cursor += 1;
+        // Ok(value)
     }
 
     /// this method just inverts the caller of
@@ -37,7 +39,7 @@ impl<'a> Reader<'a> {
         T::deserialize(self)
     }
 
-    pub fn dump_packed_byte(&mut self, width: u8) -> Result<u8> {
+    pub fn dump_packed_bits(&mut self, width: u8) -> Result<u8> {
         if self.bytes.is_empty() || self.cursor == self.bytes.len() {
             bail!("Unexpectend end of buffer");
         }
@@ -73,7 +75,7 @@ impl<'a> Reader<'a> {
         println!("{} bits remain\n>>", remainder_bits_needed);
         self.bit_cursor = 0;
         self.cursor += 1;
-        let other_bits = self.dump_packed_byte(remainder_bits_needed)?;
+        let other_bits = self.dump_packed_bits(remainder_bits_needed)?;
         println!(">>");
         let ord = result | other_bits;
         println!(

@@ -3,7 +3,7 @@ use crate::*;
 #[derive(PartialEq, Clone, Debug)]
 pub struct SimpleStruct {
     val_one: bool,
-    val_two: u32,
+    val_two: u8,
     val_three: String,
 }
 
@@ -21,7 +21,7 @@ impl<'a> Deserialize<'a> for SimpleStruct {
         Self: Sized,
     {
         let val_one = reader.visit::<bool>()?;
-        let val_two = reader.visit::<u32>()?;
+        let val_two = reader.visit::<u8>()?;
         let val_three = reader.visit::<String>()?;
         Ok(Self {
             val_one,
@@ -32,7 +32,7 @@ impl<'a> Deserialize<'a> for SimpleStruct {
 }
 
 impl SimpleStruct {
-    pub fn new(one: bool, two: u32, three: impl Into<String>) -> Self {
+    pub fn new(one: bool, two: u8, three: impl Into<String>) -> Self {
         Self {
             val_one: one,
             val_two: two,
@@ -40,9 +40,23 @@ impl SimpleStruct {
         }
     }
 }
+
+#[test]
+fn test_recover_num() {
+    let mut writer = Writer::default();
+    writer.insert_packed_byte(1);
+    15u8.serialize(&mut writer);
+    let finish = writer.finish();
+    let mut reader = Reader::new(&finish);
+    _ = reader.dump_packed_bits(1);
+    let value = u8::deserialize(&mut reader).unwrap();
+
+    assert_eq!(15, value);
+}
+
 #[test]
 fn test_simple_struct() {
-    let val = SimpleStruct::new(false, 1823, "oiwejoi");
+    let val = SimpleStruct::new(false, 5, "");
 
     let varint = crate::to_dcf(&val);
     println!("Writer Values:");
@@ -58,7 +72,7 @@ fn test_simple_struct() {
 #[test]
 fn test_simple_structs() {
     for val in [
-        SimpleStruct::new(false, 1823, "oiwejoi"),
+        SimpleStruct::new(false, 5, "oiwejoi"),
         SimpleStruct::new(true, 0, "0182"),
     ] {
         test_serde(val);

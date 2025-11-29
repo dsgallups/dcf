@@ -14,7 +14,7 @@ impl<'a> Deserialize<'a> for bool {
     where
         Self: Sized,
     {
-        let result = reader.dump_packed_byte(1)?;
+        let result = reader.dump_packed_bits(1)?;
         println!("bool result: {result}");
         Ok(result != 0)
     }
