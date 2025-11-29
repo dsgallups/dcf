@@ -25,6 +25,23 @@ where
     }
 }
 
+impl<'a, T> Deserialize<'a> for Vec<T>
+where
+    T: Deserialize<'a>,
+{
+    fn collect(reader: &mut Reader<'a>) -> Result<Self>
+    where
+        Self: Sized,
+    {
+        let len = reader.dump::<usize>()?;
+        let mut result = Vec::with_capacity(len);
+        for _ in 0..len {
+            result.push(reader.dump::<T>()?);
+        }
+        Ok(result)
+    }
+}
+
 pub struct ArrayWriter {
     len: usize,
     inner: Writer,

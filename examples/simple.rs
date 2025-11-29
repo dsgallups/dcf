@@ -24,6 +24,7 @@ impl<'a> Deserialize<'a> for SimpleStruct {
         let val_one = reader.dump::<bool>()?;
         let val_two = reader.dump::<u32>()?;
         let val_three = reader.dump::<String>()?;
+        let val_four = reader.dump::<Vec<u8>>()?;
         //let val_four = reader.dump
         todo!()
     }
