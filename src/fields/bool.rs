@@ -9,7 +9,7 @@ impl Serialize for bool {
 }
 
 impl<'a> Deserialize<'a> for bool {
-    fn collect(reader: &mut Reader<'a>) -> Result<Self>
+    fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {

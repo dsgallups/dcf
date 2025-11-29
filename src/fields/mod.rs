@@ -10,7 +10,7 @@ pub trait Serialize<M = ()> {
 }
 
 pub trait Deserialize<'a, M = ()> {
-    fn collect(reader: &mut Reader<'a>) -> Result<Self>
+    fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized;
 }

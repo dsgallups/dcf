@@ -13,7 +13,7 @@ where
 }
 
 impl<'a> Deserialize<'a> for String {
-    fn collect(reader: &mut Reader<'a>) -> Result<Self>
+    fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {

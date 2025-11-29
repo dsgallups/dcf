@@ -33,7 +33,7 @@ impl<'a, T> Deserialize<'a> for Vec<T>
 where
     T: Deserialize<'a>,
 {
-    fn collect(reader: &mut Reader<'a>) -> Result<Self>
+    fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {

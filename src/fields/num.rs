@@ -8,7 +8,7 @@ macro_rules! prim_field {
             }
         }
         impl<'a> Deserialize<'a> for $prim {
-            fn collect(reader: &mut Reader<'a>) -> Result<Self>
+            fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
             where
                 Self: Sized,
             {
@@ -56,7 +56,7 @@ macro_rules! prim_field_signed {
             }
         }
         impl<'a> Deserialize<'a> for $prim {
-            fn collect(reader: &mut Reader<'a>) -> Result<Self>
+            fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
             where
                 Self: Sized,
             {

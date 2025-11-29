@@ -16,7 +16,7 @@ impl Serialize for SimpleStruct {
 }
 
 impl<'a> Deserialize<'a> for SimpleStruct {
-    fn collect(reader: &mut Reader<'a>) -> Result<Self>
+    fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {

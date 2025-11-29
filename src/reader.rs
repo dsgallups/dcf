@@ -36,6 +36,6 @@ impl<'a> Reader<'a> {
     ///
     /// Useful for reading the proc-macro expansion code.
     pub fn visit<T: Deserialize<'a>>(&mut self) -> Result<T> {
-        T::collect(self)
+        T::deserialize(self)
     }
 }
