@@ -10,32 +10,36 @@ impl<'a> Collector<'a> {
             fields: Vec::with_capacity(cap),
         }
     }
+    pub fn insert(&mut self, values: &[u8]) {
+        todo!()
+    }
 
-    pub fn bool(&mut self, value: bool) {
-        self.fields.push(FieldValue::Bool(value));
-    }
-    pub fn number(&mut self, number: i128) {
-        self.fields.push(FieldValue::Number(number))
-    }
-    pub fn string(&mut self, val: &str) {
-        //ill deal with you later
-        let val = val.to_string();
-        self.fields.push(FieldValue::String(val.into()))
-    }
-    pub fn arr_start(&mut self) {
-        self.fields.push(FieldValue::ArrayStart);
-    }
-    pub fn arr_end(&mut self) {
-        self.fields.push(FieldValue::ArrayEnd);
-    }
+    // pub fn bool(&mut self, value: bool) {
+    //     self.fields.push(FieldValue::Bool(value));
+    // }
+    // pub fn number(&mut self, number: i128) {
+    //     self.fields.push(FieldValue::Number(number))
+    // }
+    // pub fn string(&mut self, val: &str) {
+    //     //ill deal with you later
+    //     let val = val.to_string();
+    //     self.fields.push(FieldValue::String(val.into()))
+    // }
+    // pub fn arr_start(&mut self) {
+    //     self.fields.push(FieldValue::ArrayStart);
+    // }
+    // pub fn arr_end(&mut self) {
+    //     self.fields.push(FieldValue::ArrayEnd);
+    // }
     pub fn finish(self) -> Vec<u8> {
-        let mut result = Vec::new();
+        todo!()
+        //let mut result = Vec::new();
 
-        for field in self.fields {
-            field.into_bytes(&mut result);
-        }
+        // for field in self.fields {
+        //     field.into_bytes(&mut result);
+        // }
 
-        result
+        // result
     }
 }
 
@@ -54,9 +58,14 @@ impl<'a> FieldValue<'a> {
                 bytes.push(value as u8);
             }
             FieldValue::Number(num) => {
-                bytes.extend(num.to_be_bytes());
+                // zigzag encoding to preprocess signed values.
+                // We could skip this for unsigned values, taking up
+                // less space theoretically.
+                let num = ((num << 1) ^ (num >> 127)) as u128;
+                encode_int(num, bytes);
             }
             FieldValue::String(val) => {
+                encode_int(val.len() as u128, bytes);
                 bytes.extend(val.as_bytes());
             }
             FieldValue::ArrayStart => {

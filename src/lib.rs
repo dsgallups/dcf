@@ -2,6 +2,10 @@
 Assumptions:
 - I can use proc macro crates (syn, proc_macro2)
 - I can use `anyhow` for results
+
+
+A tradeoff design choice:
+
 "#]
 
 mod dumper;

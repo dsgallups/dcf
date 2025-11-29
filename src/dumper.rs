@@ -1,7 +1,10 @@
+use std::io::Cursor;
+
 use crate::*;
 
 pub struct Dumper<'a> {
     cursor: usize,
+    // this could be a `Read`
     inner: &'a [u8],
 }
 impl<'a> Dumper<'a> {
@@ -10,6 +13,11 @@ impl<'a> Dumper<'a> {
             cursor: 0,
             inner: bytes,
         }
+    }
+    pub fn read_exact(&mut self, len: usize) -> Result<&[u8]> {
+        let slice = &self.inner[self.cursor..self.cursor + len];
+        self.cursor += len;
+        Ok(slice)
     }
     pub fn dump_bool(&mut self) -> Result<bool> {
         let value = self.inner[self.cursor];
@@ -21,7 +29,11 @@ impl<'a> Dumper<'a> {
         todo!()
     }
 
-    pub fn dump<T>(&mut self) -> Result<T> {
-        todo!()
+    /// this method just inverts the caller of
+    /// [`Fields::collect`].
+    ///
+    /// Useful for reading the proc-macro expansion code.
+    pub fn dump<T: Fields<'a>>(&mut self) -> Result<T> {
+        T::collect(self)
     }
 }
