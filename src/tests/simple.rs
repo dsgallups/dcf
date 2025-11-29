@@ -56,7 +56,7 @@ fn test_recover_num() {
 
 #[test]
 fn test_simple_struct() {
-    let val = SimpleStruct::new(false, 5, "");
+    let val = SimpleStruct::new(false, 5, "val");
 
     let varint = crate::to_dcf(&val);
     println!("Writer Values:");

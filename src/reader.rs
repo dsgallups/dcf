@@ -1,3 +1,7 @@
+use std::borrow::Cow;
+
+use anyhow::Error;
+
 use crate::*;
 
 pub struct Reader<'a> {
@@ -14,10 +18,18 @@ impl<'a> Reader<'a> {
             bit_cursor: 0,
         }
     }
-    pub fn read_exact(&mut self, len: usize) -> Result<&[u8]> {
-        let slice = &self.bytes[self.cursor..self.cursor + len];
-        self.cursor += len;
-        Ok(slice)
+    pub fn read_exact(&mut self, len: usize) -> Result<Cow<'_, [u8]>> {
+        if self.bit_cursor == 0 {
+            let slice = &self.bytes[self.cursor..self.cursor + len];
+            self.cursor += len;
+            Ok(Cow::Borrowed(slice))
+        } else {
+            let result = (0..len)
+                .map(|_| self.dump_byte())
+                .collect::<Result<Vec<_>, Error>>()?;
+
+            Ok(Cow::Owned(result))
+        }
     }
     /// Dumps the next byte, assuming that it is not packed.
     pub fn dump_byte(&mut self) -> Result<u8> {
