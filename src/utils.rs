@@ -5,11 +5,11 @@ use std::fmt::Debug;
 use crate::{Deserialize, Serialize};
 
 pub(crate) struct IntEncoder {
-    num: u128,
+    num: Option<u128>,
 }
 impl IntEncoder {
     pub fn new(num: u128) -> Self {
-        Self { num }
+        Self { num: Some(num) }
     }
 }
 
@@ -20,16 +20,16 @@ impl Iterator for IntEncoder {
         (0, None)
     }
     fn next(&mut self) -> Option<Self::Item> {
-        if self.num == 0 {
+        let Some(num) = &mut self.num else {
             return None;
-        }
-        if self.num >= 0x80 {
-            let res = self.num as u8 | 0x80;
-            self.num >>= 7;
+        };
+        if *num >= 0x80 {
+            let res = *num as u8 | 0x80;
+            *num >>= 7;
             Some(res)
         } else {
-            let res = self.num as u8;
-            self.num = 0;
+            let res = *num as u8;
+            self.num = None;
             Some(res)
         }
     }
@@ -40,7 +40,6 @@ where
     T: Serialize + for<'a> Deserialize<'a> + Debug + PartialEq + Clone,
 {
     let varint = crate::serialize(val.clone());
-    println!("Value: {val:?}, result: {varint:?}");
     let decode: T = crate::deserialize(&varint).unwrap();
 
     assert_eq!(val, decode);

@@ -1,14 +1,5 @@
 use crate::{utils::IntEncoder, *};
 
-#[test]
-fn serde_i128_others() {
-    utils::test_serde(i128::MAX);
-    utils::test_serde(i128::MIN);
-    utils::test_serde(3819012083i128);
-    utils::test_serde(1239812301847803570212i128);
-    utils::test_serde(5i128);
-}
-
 macro_rules! prim_field {
     ($prim:ident, $width:literal) => {
         impl Serialize for $prim {
@@ -25,15 +16,7 @@ macro_rules! prim_field {
                 let mut shift = 0;
 
                 loop {
-                    let byte = match reader.dump_byte() {
-                        Ok(byte) => byte,
-                        Err(e) => {
-                            if result == 0 {
-                                return Ok(0);
-                            }
-                            return Err(e);
-                        }
-                    };
+                    let byte = reader.dump_byte()?;
 
                     result |= ((byte & 0x7F) as $prim) << shift;
                     if byte & 0x80 == 0 {
@@ -104,7 +87,9 @@ macro_rules! prim_field_signed {
                 utils::test_serde($prim::MAX);
                 utils::test_serde($prim::MIN);
                 utils::test_serde(42);
+                utils::test_serde(-42);
                 utils::test_serde(255);
+                utils::test_serde(-255);
             }
         }
     };
@@ -124,3 +109,12 @@ prim_field_signed!(i128, 128);
 // these would be conditionally compiled
 prim_field!(usize, 64);
 prim_field_signed!(isize, 64);
+
+#[test]
+fn serde_i128_others() {
+    utils::test_serde(i128::MAX);
+    utils::test_serde(i128::MIN);
+    utils::test_serde(3819012083i128);
+    utils::test_serde(1239812301847803570212i128);
+    utils::test_serde(5i128);
+}
