@@ -46,7 +46,7 @@ impl TinyWriter {
             return;
         }
 
-        let remainder_bits = shifted << (8 - remainder_bits_occupied);
+        let remainder_bits = shifted << (bits_occupied - remainder_bits_occupied);
         // println!(
         //     "remainder bits: {:08b}, remainder_bits_occupied: {}",
         //     remainder_bits, remainder_bits_occupied

@@ -30,9 +30,9 @@ fn main() {
         println!("  Expected: {:08b} {:08b}", expected_first, expected_second);
 
         if result[0] == expected_first && result[1] == expected_second {
-            println!("  ✓ PASS");
+            println!("PASS");
         } else {
-            println!("  ✗ FAIL");
+            println!("FAIL");
         }
         println!();
     }
@@ -41,10 +41,8 @@ fn main() {
     println!("Testing with multiple bytes: [0xFF, 0xAA]");
     let mut tiny = TinyWriter::default();
 
-    // Insert 0 bit
     tiny.insert_bitlen(0);
 
-    // Insert two bytes
     tiny.insert_bytes(vec![0xFF, 0xAA]);
 
     let result = tiny.finish();
@@ -62,8 +60,8 @@ fn main() {
     println!("  Expected: 01111111 11010101 00000000");
 
     if result[0] == 0b01111111 && result[1] == 0b11010101 && result[2] == 0b00000000 {
-        println!("  ✓ PASS");
+        println!("PASS");
     } else {
-        println!("  ✗ FAIL");
+        println!("FAIL");
     }
 }
