@@ -40,6 +40,7 @@ where
     T: Serialize + for<'a> Deserialize<'a> + Debug + PartialEq + Clone,
 {
     let varint = crate::serialize(val.clone());
+    println!("Value: {val:?}, result: {varint:?}");
     let decode: T = crate::deserialize(&varint).unwrap();
 
     assert_eq!(val, decode);
