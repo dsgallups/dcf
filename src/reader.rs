@@ -1,5 +1,3 @@
-use std::io::Cursor;
-
 use crate::*;
 
 pub struct Reader<'a> {
@@ -19,12 +17,16 @@ impl<'a> Reader<'a> {
         self.cursor += len;
         Ok(slice)
     }
-    pub fn dump_bool(&mut self) -> Result<bool> {
+    pub fn dump_byte(&mut self) -> Result<u8> {
+        if self.cursor >= self.inner.len() {
+            bail!("Unexpected end of buffer");
+        }
         let value = self.inner[self.cursor];
 
         self.cursor += 1;
-        Ok(value != 0)
+        Ok(value)
     }
+
     pub fn dump_str(&mut self) -> Result<String> {
         todo!()
     }
@@ -33,7 +35,7 @@ impl<'a> Reader<'a> {
     /// [`Fields::collect`].
     ///
     /// Useful for reading the proc-macro expansion code.
-    pub fn dump<T: Deserialize<'a>>(&mut self) -> Result<T> {
-        T::collect(self)
+    pub fn visit<T: Deserialize<'a>>(&mut self) -> Result<T> {
+        T::deserialize(self)
     }
 }

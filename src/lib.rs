@@ -17,17 +17,22 @@ pub use fields::*;
 mod writer;
 pub use writer::*;
 
-pub(crate) use fields::utils;
+mod utils;
+#[allow(unused_imports)]
+pub use utils::*;
 
-pub use anyhow::Result;
+#[cfg(test)]
+mod tests;
 
-pub fn serialize<S: Serialize>(value: S) -> Vec<u8> {
+pub use anyhow::{Result, bail};
+
+pub fn to_dcf<S: Serialize<M>, M>(value: &S) -> Vec<u8> {
     let mut collector = Writer::default();
-    value.dump(&mut collector);
+    value.serialize(&mut collector);
     collector.finish()
 }
 
-pub fn deserialize<'a, S: Deserialize<'a>>(bytes: &'a [u8]) -> Result<S> {
+pub fn from_dcf<'a, S: Deserialize<'a, M>, M>(bytes: &'a [u8]) -> Result<S> {
     let mut dumper = Reader::new(bytes);
-    S::collect(&mut dumper)
+    S::deserialize(&mut dumper)
 }

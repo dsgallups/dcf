@@ -1,5 +1,3 @@
-use crate::Serialize;
-
 #[derive(Default)]
 pub struct Writer {
     stack: Vec<u8>,

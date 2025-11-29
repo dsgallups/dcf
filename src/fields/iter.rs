@@ -1,27 +1,48 @@
-use crate::{utils::IntEncoder, *};
+use crate::*;
 
-pub struct IterField<T>(T);
+pub struct Slice<M>(M);
 
-impl<I, T> Serialize<IterField<T>> for I
+impl<T, M> Serialize<Slice<M>> for [T]
 where
-    I: IntoIterator<Item = T>,
-    T: Serialize,
+    T: Serialize<M>,
 {
-    fn dump(self, writer: &mut Writer) {
-        let iter = self.into_iter();
-        let (lb, up) = iter.size_hint();
-        let cap = up.unwrap_or(lb) + 1;
-
+    fn serialize(&self, writer: &mut Writer) {
         let mut inner_writer = ArrayWriter {
             len: 0,
-            inner: Writer::new(cap),
+            inner: Writer::new(self.len()),
         };
 
-        for field in iter {
+        for field in self {
             inner_writer.insert(field);
         }
 
         writer.insert(IntEncoder::new(inner_writer.len as u128).chain(inner_writer.inner.finish()));
+    }
+}
+
+impl<T, M> Serialize<Slice<M>> for Vec<T>
+where
+    T: Serialize<M>,
+{
+    fn serialize(&self, writer: &mut Writer) {
+        self.as_slice().serialize(writer);
+    }
+}
+
+impl<'a, T> Deserialize<'a> for Vec<T>
+where
+    T: Deserialize<'a>,
+{
+    fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
+    where
+        Self: Sized,
+    {
+        let len = reader.visit::<usize>()?;
+        let mut result = Vec::with_capacity(len);
+        for _ in 0..len {
+            result.push(reader.visit::<T>()?);
+        }
+        Ok(result)
     }
 }
 
@@ -30,8 +51,8 @@ pub struct ArrayWriter {
     inner: Writer,
 }
 impl ArrayWriter {
-    pub fn insert<M, T: Serialize<M>>(&mut self, val: T) {
+    pub fn insert<M, T: Serialize<M>>(&mut self, val: &T) {
         self.len += 1;
-        val.dump(&mut self.inner);
+        val.serialize(&mut self.inner);
     }
 }
