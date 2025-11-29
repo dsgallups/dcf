@@ -1,7 +1,7 @@
 use crate::*;
 
 impl<'a> Fields<'a> for bool {
-    fn dump(&self, collector: &mut Collector) {
+    fn dump(&self, collector: &mut Writer) {
         collector.insert(&[*self as u8]);
     }
     fn collect(dumper: &mut Dumper<'a>) -> Result<Self>

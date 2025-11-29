@@ -14,13 +14,13 @@ pub use dumper::*;
 mod fields;
 pub use fields::*;
 
-mod collector;
-pub use collector::*;
+mod writer;
+pub use writer::*;
 
 pub use anyhow::Result;
 
 pub fn serialize<'a, S: Fields<'a>>(value: &S) -> Vec<u8> {
-    let mut collector = Collector::default();
+    let mut collector = Writer::default();
     value.dump(&mut collector);
     collector.finish()
 }

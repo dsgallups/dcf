@@ -9,7 +9,7 @@ fn encode_int(mut num: u128, bytes: &mut Vec<u8>) {
 }
 
 impl<'a> Fields<'a> for i128 {
-    fn dump(&self, collector: &mut Collector) {
+    fn dump(&self, collector: &mut Writer) {
         let num = *self;
         let mut buf = Vec::new();
 

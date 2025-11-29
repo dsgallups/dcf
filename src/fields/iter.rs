@@ -7,7 +7,7 @@ where
     I: IntoIterator<Item = T>,
     T: Fields<'a>,
 {
-    fn dump(&self, collector: &mut Collector) {
+    fn dump(&self, collector: &mut Writer) {
         collector.arr_start();
 
         collector.arr_end();

@@ -1,11 +1,11 @@
 #[derive(Default)]
-pub struct Collector {
-    fields: Vec<Vec<u8>>,
+pub struct Writer {
+    stack: Vec<Vec<u8>>,
 }
-impl Collector {
+impl Writer {
     pub fn new(cap: usize) -> Self {
         Self {
-            fields: Vec::with_capacity(cap),
+            stack: Vec::with_capacity(cap),
         }
     }
     pub fn insert(&mut self, values: &[u8]) {
