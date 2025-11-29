@@ -2,7 +2,6 @@ mod bool;
 mod iter;
 mod num;
 mod str;
-pub(crate) mod utils;
 
 use crate::*;
 

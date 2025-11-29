@@ -1,4 +1,4 @@
-pub struct IntEncoder {
+pub(crate) struct IntEncoder {
     num: u128,
 }
 impl IntEncoder {

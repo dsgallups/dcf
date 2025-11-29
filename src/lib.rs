@@ -17,7 +17,8 @@ pub use fields::*;
 mod writer;
 pub use writer::*;
 
-pub(crate) use fields::utils;
+mod utils;
+pub use utils::*;
 
 pub use anyhow::{Result, bail};
 
