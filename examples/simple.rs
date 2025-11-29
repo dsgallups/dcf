@@ -7,12 +7,12 @@ pub struct SimpleStruct {
     val_four: Vec<u8>,
 }
 
-impl<'a> Serialize for SimpleStruct {
-    fn dump(&self, writer: &mut impl Writer) {
-        self.val_one.dump(collector);
-        self.val_two.dump(collector);
-        self.val_three.dump(collector);
-        self.val_four.dump(collector);
+impl Serialize for SimpleStruct {
+    fn dump(self, writer: &mut impl DcfWriter) {
+        self.val_one.dump(writer);
+        self.val_two.dump(writer);
+        self.val_three.dump(writer);
+        self.val_four.dump(writer);
     }
 }
 
@@ -23,7 +23,7 @@ fn main() {
         val_three: "yoyo".to_string(),
         val_four: vec![2, 2, 1, 3],
     };
-    let bytes = dcf::serialize(&simple_struct);
+    let bytes = dcf::serialize(simple_struct);
 
     //let struct_copy: SimpleStruct = dcf::deserialize(&bytes).unwrap();
 }

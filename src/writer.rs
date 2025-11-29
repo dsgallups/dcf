@@ -1,12 +1,12 @@
-pub trait Writer {
+pub trait DcfWriter {
     fn insert(&mut self, values: &[u8]);
 }
 
 #[derive(Default)]
 pub struct VecWriter {
-    stack: Vec<Vec<u8>>,
+    stack: Vec<u8>,
 }
-impl Writer for VecWriter {
+impl DcfWriter for VecWriter {
     fn insert(&mut self, values: &[u8]) {
         todo!()
     }

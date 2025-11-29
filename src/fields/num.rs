@@ -1,14 +1,13 @@
 use crate::*;
 
 impl Serialize for i128 {
-    fn dump(&self, writer: &mut impl Writer) {
-        let num = *self;
+    fn dump(self, writer: &mut impl DcfWriter) {
         let mut buf = Vec::new();
 
         // zigzag encoding to preprocess signed values.
         // We could skip this for unsigned values, taking up
         // less space theoretically.
-        let num = ((num << 1) ^ (num >> 127)) as u128;
+        let num = ((self << 1) ^ (self >> 127)) as u128;
         utils::encode_int(num, &mut buf);
         writer.insert(&buf);
     }
@@ -25,8 +24,8 @@ impl<'a> Deserialize<'a> for i128 {
 macro_rules! prim_field {
     ($prim:ty) => {
         impl Serialize for $prim {
-            fn dump(&self, writer: &mut impl Writer) {
-                (*self as i128).dump(writer);
+            fn dump(self, writer: &mut impl DcfWriter) {
+                (self as i128).dump(writer);
             }
         }
         impl<'a> Deserialize<'a> for $prim {

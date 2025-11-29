@@ -21,7 +21,7 @@ pub(crate) use fields::utils;
 
 pub use anyhow::Result;
 
-pub fn serialize<S: Serialize>(value: &S) -> Vec<u8> {
+pub fn serialize<S: Serialize>(value: S) -> Vec<u8> {
     let mut collector = VecWriter::default();
     value.dump(&mut collector);
     collector.finish()

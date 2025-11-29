@@ -1,8 +1,8 @@
 use crate::*;
 
 impl Serialize for bool {
-    fn dump(&self, writer: &mut impl Writer) {
-        writer.insert(&[*self as u8]);
+    fn dump(self, writer: &mut impl DcfWriter) {
+        writer.insert(&[self as u8]);
     }
 }
 
