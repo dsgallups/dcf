@@ -1,8 +1,10 @@
+use dcf::*;
+
 #[derive(Default)]
 pub struct TinyWriter {
     stack: Vec<u8>,
-    current_bit_cursor: u8,
-    current_bit: u8,
+    bit_cursor: u8,
+    current_byte: u8,
 }
 
 /// Returns a bit with information shifted to the left
@@ -19,19 +21,19 @@ fn shift(bit: u8) -> (u8, u8) {
 
 impl TinyWriter {
     pub fn insert_shifted_bit(&mut self, shifted: u8, bits_occupied: u8) {
-        self.current_bit |= shifted >> self.current_bit_cursor;
+        self.current_byte |= shifted >> self.bit_cursor;
 
-        self.current_bit_cursor += bits_occupied;
+        self.bit_cursor += bits_occupied;
 
-        if self.current_bit_cursor < 8 {
+        if self.bit_cursor < 8 {
             return;
         }
 
-        let remainder_bits_occupied = self.current_bit_cursor - 8;
+        let remainder_bits_occupied = self.bit_cursor - 8;
 
-        self.stack.push(self.current_bit);
-        self.current_bit_cursor = 0;
-        self.current_bit = 0;
+        self.stack.push(self.current_byte);
+        self.bit_cursor = 0;
+        self.current_byte = 0;
         if remainder_bits_occupied == 0 {
             return;
         }
@@ -46,12 +48,12 @@ impl TinyWriter {
 
         println!(
             "Bit: {bit:08b}\nRes: {:08b}\nCur: {}\n==========",
-            self.current_bit, self.current_bit_cursor
+            self.current_byte, self.bit_cursor
         );
     }
 
     pub fn finish(mut self) -> Vec<u8> {
-        self.stack.push(self.current_bit);
+        self.stack.push(self.current_byte);
         self.stack
     }
 }
@@ -68,14 +70,89 @@ fn main() {
     w.insert_bitlen(1);
     w.insert_bitlen(2);
     w.insert_bitlen(1);
-    assert_eq!(w.current_bit, 0b1011_0100);
+    assert_eq!(w.current_byte, 0b1011_0100);
 
     w.insert_bitlen(0b1011);
 
     assert_eq!(w.stack[0], 0b1011_0110);
-    assert_eq!(w.current_bit, 0b1100_0000);
+    assert_eq!(w.current_byte, 0b1100_0000);
 
     let bytes = w.finish();
+    let first = bytes[0];
+    let second = bytes[1];
+    //10110110 11000000
+    println!("Success encoding!\n{first:08b} {second:08b}\n\n");
 
-    println!("Success encoding! {bytes:?}");
+    let mut reader = TinyReader::new(&bytes);
+
+    assert_eq!(1, reader.pull_byte(1).unwrap());
+    assert_eq!(0, reader.pull_byte(1).unwrap());
+    assert_eq!(1, reader.pull_byte(1).unwrap());
+    assert_eq!(2, reader.pull_byte(2).unwrap());
+    assert_eq!(1, reader.pull_byte(1).unwrap());
+    assert_eq!(0b1011, reader.pull_byte(4).unwrap());
+}
+
+pub struct TinyReader<'a> {
+    bytes: &'a [u8],
+    cursor: usize,
+    bit_cursor: u8,
+}
+impl<'a> TinyReader<'a> {
+    pub fn new(bytes: &'a [u8]) -> Self {
+        Self {
+            bytes,
+            cursor: 0,
+            bit_cursor: 0,
+        }
+    }
+    pub fn pull_byte(&mut self, width: u8) -> Result<u8> {
+        if self.bytes.is_empty() || self.cursor == self.bytes.len() {
+            bail!("Unexpectend end of buffer");
+        }
+        let mut result = self.bytes[self.cursor];
+
+        let from = self.bit_cursor;
+        //let to = self.bit_cursor + width;
+        /*
+        cursor at 3, width is 4
+        byte
+        10110101
+        shift left 3
+        10101000
+        shift right 4
+        00001010
+
+        cursor is now at 7
+        */
+        println!("bit_cursor: {}, width: {}", self.bit_cursor, width);
+        println!("re0: {:08b}. Shifting left {from}", result);
+        result <<= from;
+
+        println!("re1: {:08b}. Shifting right {}", result, 8 - width);
+        result >>= 8 - width;
+        println!("re2: {:08b}", result);
+        self.bit_cursor += width;
+        if self.bit_cursor < 8 {
+            println!("===================");
+            return Ok(result);
+        }
+
+        let remainder_bits_needed = self.bit_cursor - 8;
+        println!("{} bits remain\n>>", remainder_bits_needed);
+        self.bit_cursor = 0;
+        self.cursor += 1;
+        let other_bits = self.pull_byte(remainder_bits_needed)?;
+        println!(">>");
+        let ord = result | other_bits;
+        println!(
+            "re2: {:08b}\notb: {:08b} =\nord: {:08b}",
+            result, other_bits, ord
+        );
+
+        //println!("byt: {:08b}\nres: {:08b}", self.current_byte, result);
+
+        println!("===================");
+        Ok(ord)
+    }
 }
