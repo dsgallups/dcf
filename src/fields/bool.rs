@@ -9,10 +9,10 @@ impl Serialize for bool {
 }
 
 impl<'a> Deserialize<'a> for bool {
-    fn collect(dumper: &mut Reader<'a>) -> Result<Self>
+    fn collect(reader: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {
-        Ok(dumper.read_exact(1)?[0] != 0)
+        Ok(reader.read_exact(1)?[0] != 0)
     }
 }

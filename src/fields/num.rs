@@ -1,5 +1,3 @@
-use std::i128;
-
 use crate::{utils::IntEncoder, *};
 
 impl Serialize for i128 {
@@ -12,7 +10,7 @@ impl Serialize for i128 {
     }
 }
 impl<'a> Deserialize<'a> for i128 {
-    fn collect(dumper: &mut Reader<'a>) -> Result<Self>
+    fn collect(reader: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {
@@ -20,7 +18,7 @@ impl<'a> Deserialize<'a> for i128 {
         let mut shift = 0;
 
         loop {
-            let byte = dumper.dump_byte()?;
+            let byte = reader.dump_byte()?;
 
             zigzag |= ((byte & 0x7F) as u128) << shift;
             if byte & 0x80 == 0 {
@@ -61,11 +59,11 @@ macro_rules! prim_field {
             }
         }
         impl<'a> Deserialize<'a> for $prim {
-            fn collect(dumper: &mut Reader<'a>) -> Result<Self>
+            fn collect(reader: &mut Reader<'a>) -> Result<Self>
             where
                 Self: Sized,
             {
-                Ok(i128::collect(dumper)? as $prim)
+                Ok(i128::collect(reader)? as $prim)
             }
         }
     };

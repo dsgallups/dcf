@@ -17,13 +17,13 @@ impl Serialize for SimpleStruct {
 }
 
 impl<'a> Deserialize<'a> for SimpleStruct {
-    fn collect(dumper: &mut Reader<'a>) -> Result<Self>
+    fn collect(reader: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {
-        let val_one = dumper.dump::<bool>()?;
-        let val_two = dumper.dump::<u32>()?;
-        //let val_three = dumper.dump::<String>()?;
+        let val_one = reader.dump::<bool>()?;
+        let val_two = reader.dump::<u32>()?;
+        let val_three = reader.dump::<String>()?;
         todo!()
     }
 }
