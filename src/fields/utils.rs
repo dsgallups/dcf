@@ -1,11 +1,30 @@
-pub fn encode_int(mut num: u128, bytes: &mut Vec<u8>) {
-    while num >= 0x80 {
-        bytes.push((num as u8) | 0x8);
-        num >>= 7;
-    }
-    bytes.push(num as u8);
+pub struct IntEncoder {
+    num: u128,
 }
-// pub fn encode_signed_int(num: i128, bytes: &mut Vec<u8>) {
-//     let num = ((num << 1) ^ (num >> 127)) as u128;
-//     encode_int(num, bytes);
-// }
+impl IntEncoder {
+    pub fn new(num: u128) -> Self {
+        Self { num }
+    }
+}
+
+impl Iterator for IntEncoder {
+    type Item = u8;
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        //todo
+        (0, None)
+    }
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.num == 0 {
+            return None;
+        }
+        if self.num >= 0x80 {
+            let res = self.num as u8 | 0x8;
+            self.num >>= 7;
+            Some(res)
+        } else {
+            let res = self.num as u8;
+            self.num = 0;
+            Some(res)
+        }
+    }
+}

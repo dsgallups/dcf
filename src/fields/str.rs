@@ -1,4 +1,4 @@
-use crate::*;
+use crate::{utils::IntEncoder, *};
 
 pub struct StringType;
 
@@ -8,11 +8,6 @@ where
 {
     fn dump(self, writer: &mut Writer) {
         let val: &str = self.as_ref();
-        let mut varint = Vec::new();
-        utils::encode_int(val.len() as u128, &mut varint);
-
-        varint.extend(val.as_bytes());
-
-        writer.insert(varint);
+        writer.insert(IntEncoder::new(val.len() as u128).chain(val.as_bytes().iter().copied()));
     }
 }

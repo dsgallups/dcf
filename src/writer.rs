@@ -1,3 +1,5 @@
+use crate::Serialize;
+
 #[derive(Default)]
 pub struct Writer {
     stack: Vec<u8>,
@@ -9,6 +11,28 @@ impl Writer {
             stack: Vec::with_capacity(cap),
         }
     }
+
+    pub fn push(&mut self, val: u8) -> usize {
+        self.stack.push(val);
+        self.stack.len() - 1
+    }
+    pub fn set(&mut self, index: usize, val: u8) {
+        self.stack[index] = val;
+    }
+
+    // pub fn arr<F>(&mut self, cap: usize, func: F)
+    // where
+    //     F: FnOnce(&mut ArrayWriter),
+    // {
+    //     let mut inner_writer = ArrayWriter {
+    //         len: 0,
+    //         inner: Writer::new(cap),
+    //     };
+    //     func(&mut inner_writer);
+
+    //     self.stack.push(inner_writer.len);
+    //     self.stack.extend(inner_writer.inner);
+    // }
 
     pub fn insert(&mut self, iter: impl IntoIterator<Item = u8>) {
         todo!()

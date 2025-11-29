@@ -1,4 +1,4 @@
-use crate::*;
+use crate::{utils::IntEncoder, *};
 
 pub struct IterField<T>(T);
 
@@ -17,18 +17,27 @@ where
         let (lb, up) = iter.size_hint();
         let cap = up.unwrap_or(lb) + 1;
 
-        let inner_writer = Writer::new(cap);
+        let mut inner_writer = ArrayWriter {
+            len: 0,
+            inner: Writer::new(cap),
+        };
 
-        todo!()
-        //inner_writer.inner.push(0);
-        // let mut len = 0;
-        // for field in iter {
-        //     field.dump(&mut iter_collector);
-        //     len += 1;
-        // }
-        //iter_collector.inner[0] = len;
+        for field in iter {
+            inner_writer.insert(field);
+        }
 
-        //writer.insert(iter_collector.inner);
+        writer.insert(IntEncoder::new(inner_writer.len as u128).chain(inner_writer.inner.finish()));
+    }
+}
+
+pub struct ArrayWriter {
+    len: usize,
+    inner: Writer,
+}
+impl ArrayWriter {
+    pub fn insert<M, T: Serialize<M>>(&mut self, val: T) {
+        self.len += 1;
+        val.dump(&mut self.inner);
     }
 }
 

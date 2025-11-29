@@ -1,15 +1,12 @@
-use crate::*;
+use crate::{utils::IntEncoder, *};
 
 impl Serialize for i128 {
     fn dump(self, writer: &mut Writer) {
-        let mut buf = Vec::new();
-
         // zigzag encoding to preprocess signed values.
         // We could skip this for unsigned values, taking up
         // less space theoretically.
         let num = ((self << 1) ^ (self >> 127)) as u128;
-        utils::encode_int(num, &mut buf);
-        writer.insert(buf);
+        writer.insert(IntEncoder::new(num));
     }
 }
 impl<'a> Deserialize<'a> for i128 {
