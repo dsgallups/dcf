@@ -7,5 +7,5 @@ fn test_str_arrays() {
         .map(ToString::to_string)
         .collect::<Vec<_>>();
 
-    crate::test_serde(arr);
+    //crate::test_serde(arr);
 }

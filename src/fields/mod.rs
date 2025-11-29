@@ -6,7 +6,7 @@ mod str;
 use crate::*;
 
 pub trait Serialize<M = ()> {
-    fn dump(self, writer: &mut Writer);
+    fn serialize(&self, writer: &mut Writer);
 }
 
 pub trait Deserialize<'a, M = ()> {

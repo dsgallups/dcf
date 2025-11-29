@@ -3,8 +3,8 @@ use crate::{utils::IntEncoder, *};
 macro_rules! prim_field {
     ($prim:ident, $width:literal) => {
         impl Serialize for $prim {
-            fn dump(self, writer: &mut Writer) {
-                writer.insert(IntEncoder::new(self as u128));
+            fn serialize(&self, writer: &mut Writer) {
+                writer.insert(IntEncoder::new(*self as u128));
             }
         }
         impl<'a> Deserialize<'a> for $prim {
@@ -46,8 +46,8 @@ macro_rules! prim_field {
 macro_rules! prim_field_signed {
     ($prim:ident, $width:literal) => {
         impl Serialize for $prim {
-            fn dump(self, writer: &mut Writer) {
-                let num = self as i128;
+            fn serialize(&self, writer: &mut Writer) {
+                let num = *self as i128;
                 // zigzag encoding to preprocess signed values.
                 // We could skip this for unsigned values, taking up
                 // less space theoretically.

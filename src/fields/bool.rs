@@ -3,8 +3,8 @@ use std::iter;
 use crate::*;
 
 impl Serialize for bool {
-    fn dump(self, writer: &mut Writer) {
-        writer.insert(iter::once(self as u8));
+    fn serialize(&self, writer: &mut Writer) {
+        writer.insert(iter::once(*self as u8));
     }
 }
 

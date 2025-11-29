@@ -26,9 +26,9 @@ mod tests;
 
 pub use anyhow::{Result, bail};
 
-pub fn serialize<S: Serialize<M>, M>(value: S) -> Vec<u8> {
+pub fn serialize<S: Serialize<M>, M>(value: &S) -> Vec<u8> {
     let mut collector = Writer::default();
-    value.dump(&mut collector);
+    value.serialize(&mut collector);
     collector.finish()
 }
 
