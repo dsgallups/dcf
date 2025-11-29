@@ -1,4 +1,4 @@
-use dcf::TinyWriter;
+use dcf::Writer;
 
 fn main() {
     println!("Verifying that bits are shifted right by 1 after inserting a 0 bit\n");
@@ -9,10 +9,10 @@ fn main() {
     for &byte in &test_bytes {
         println!("Testing with byte: {:08b}", byte);
 
-        let mut tiny = TinyWriter::default();
+        let mut tiny = Writer::default();
 
         // Insert a 0 bit (takes 1 bit)
-        tiny.insert_bitlen(0);
+        tiny.insert_packed_byte(0);
 
         // Insert the test byte
         tiny.insert_shifted_bit(byte, 8);
@@ -39,11 +39,11 @@ fn main() {
 
     // Test with multiple bytes
     println!("Testing with multiple bytes: [0xFF, 0xAA]");
-    let mut tiny = TinyWriter::default();
+    let mut tiny = Writer::default();
 
-    tiny.insert_bitlen(0);
+    tiny.insert_packed_byte(0);
 
-    tiny.insert_bytes(vec![0xFF, 0xAA]);
+    tiny.insert(vec![0xFF, 0xAA]);
 
     let result = tiny.finish();
 

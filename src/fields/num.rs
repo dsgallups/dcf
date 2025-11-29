@@ -95,36 +95,6 @@ macro_rules! prim_field_signed {
     };
 }
 
-// impl Serialize for u8 {
-//     fn serialize(&self, writer: &mut Writer) {
-//         writer.insert(IntEncoder::new(*self as u128));
-//     }
-// }
-// impl<'a> Deserialize<'a> for u8 {
-//     fn deserialize(reader: &mut Reader<'a>) -> Result<Self>
-//     where
-//         Self: Sized,
-//     {
-//         let mut result = 0;
-//         let mut shift = 0;
-
-//         loop {
-//             let byte = reader.dump_byte()?;
-
-//             result |= ((byte & 0x7F) as u8) << shift;
-//             if byte & 0x80 == 0 {
-//                 break;
-//             }
-//             shift += 7;
-//             if shift >= 8 {
-//                 bail!("Varint too large");
-//             }
-//         }
-
-//         Ok(result)
-//     }
-// }
-
 prim_field!(u8, 8);
 prim_field!(u16, 16);
 prim_field!(u32, 32);

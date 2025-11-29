@@ -1,5 +1,3 @@
-use std::iter;
-
 use crate::*;
 
 impl Serialize for bool {
