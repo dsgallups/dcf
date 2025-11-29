@@ -2,12 +2,13 @@ use crate::*;
 
 pub struct StringType;
 
-impl<'a, S> Deserialize<'a, StringType> for S
+impl<S> Serialize<StringType> for S
 where
     S: AsRef<str>,
 {
     fn dump(&self, collector: &mut Writer) {
-        let val: &str = self.as_ref();
-        collector.string(val);
+        todo!()
+        // let val: &str = self.as_ref();
+        // collector.string(val);
     }
 }

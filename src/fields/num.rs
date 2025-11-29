@@ -1,13 +1,5 @@
 use crate::*;
 
-fn encode_int(mut num: u128, bytes: &mut Vec<u8>) {
-    while num >= 0x80 {
-        bytes.push((num as u8) | 0x8);
-        num >>= 7;
-    }
-    bytes.push(num as u8);
-}
-
 impl Serialize for i128 {
     fn dump(&self, collector: &mut Writer) {
         let num = *self;
@@ -17,7 +9,7 @@ impl Serialize for i128 {
         // We could skip this for unsigned values, taking up
         // less space theoretically.
         let num = ((num << 1) ^ (num >> 127)) as u128;
-        encode_int(num, &mut buf);
+        utils::encode_int(num, &mut buf);
         collector.insert(&buf);
     }
 }

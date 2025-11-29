@@ -17,9 +17,11 @@ pub use fields::*;
 mod writer;
 pub use writer::*;
 
+pub(crate) use fields::utils;
+
 pub use anyhow::Result;
 
-pub fn serialize<'a, S: Deserialize<'a>>(value: &S) -> Vec<u8> {
+pub fn serialize<S: Serialize>(value: &S) -> Vec<u8> {
     let mut collector = Writer::default();
     value.dump(&mut collector);
     collector.finish()

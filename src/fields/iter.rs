@@ -8,8 +8,9 @@ where
     T: Serialize,
 {
     fn dump(&self, collector: &mut Writer) {
-        collector.arr_start();
+        todo!()
+        // collector.arr_start();
 
-        collector.arr_end();
+        // collector.arr_end();
     }
 }
