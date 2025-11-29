@@ -10,6 +10,10 @@ impl Writer {
         }
     }
 
+    pub fn insert_bitlen(&mut self, bit: u8, bits: u8) {
+        todo!()
+    }
+
     pub fn insert(&mut self, iter: impl IntoIterator<Item = u8>) {
         self.stack.extend(iter);
     }

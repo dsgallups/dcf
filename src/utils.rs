@@ -34,6 +34,15 @@ impl Iterator for IntEncoder {
         }
     }
 }
+
+#[test]
+fn encode_num() {
+    let mut writer = crate::Writer::new(1);
+    183_u8.serialize(&mut writer);
+    let result = writer.finish();
+    panic!("result: {result:?}");
+}
+
 #[cfg(test)]
 pub fn test_serde<T, M1, M2>(val: T)
 where
