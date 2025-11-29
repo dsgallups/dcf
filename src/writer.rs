@@ -30,12 +30,12 @@ impl Writer {
     // }
 
     pub fn insert_shifted_bit(&mut self, shifted: u8, bits_occupied: u8) {
-        println!(
-            "inpt: {:08b}, len = {}, cursor: {}",
-            shifted, bits_occupied, self.bit_cursor
-        );
+        // println!(
+        //     "inpt: {:08b}, len = {}, cursor: {}",
+        //     shifted, bits_occupied, self.bit_cursor
+        // );
         self.current_byte |= shifted >> self.bit_cursor;
-        println!("curb: {:08b}", self.current_byte);
+        // println!("curb: {:08b}", self.current_byte);
 
         self.bit_cursor += bits_occupied;
         //println!("cursor after insert: {}", self.bit_cursor);
@@ -71,14 +71,14 @@ impl Writer {
 
     pub fn insert_packed_byte(&mut self, bit: u8) {
         let (shifted, bits_occupied) = shift(bit);
-        println!("INSERTING PACKED BYTE: {shifted}, {bits_occupied}");
+        // println!("INSERTING PACKED BYTE: {shifted}, {bits_occupied}");
         self.insert_shifted_bit(shifted, bits_occupied);
         // println!("leading zeros: {}", bit.leading_zeros());
 
-        println!(
-            "Bit: {bit:08b}\nRes: {:08b}\nCur: {}\n==========",
-            self.current_byte, self.bit_cursor
-        );
+        // println!(
+        //     "Bit: {bit:08b}\nRes: {:08b}\nCur: {}\n==========",
+        //     self.current_byte, self.bit_cursor
+        // );
     }
 
     pub fn finish(mut self) -> Vec<u8> {
