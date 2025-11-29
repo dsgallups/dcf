@@ -39,8 +39,8 @@ pub fn test_serde<T, M1, M2>(val: T)
 where
     T: Serialize<M1> + for<'a> Deserialize<'a, M2> + Debug + PartialEq,
 {
-    let varint = crate::serialize(&val);
-    let decode: T = crate::deserialize(&varint).unwrap();
+    let varint = crate::to_dcf(&val);
+    let decode: T = crate::from_dcf(&varint).unwrap();
 
     assert_eq!(val, decode);
 }

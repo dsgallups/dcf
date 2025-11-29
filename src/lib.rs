@@ -26,13 +26,13 @@ mod tests;
 
 pub use anyhow::{Result, bail};
 
-pub fn serialize<S: Serialize<M>, M>(value: &S) -> Vec<u8> {
+pub fn to_dcf<S: Serialize<M>, M>(value: &S) -> Vec<u8> {
     let mut collector = Writer::default();
     value.serialize(&mut collector);
     collector.finish()
 }
 
-pub fn deserialize<'a, S: Deserialize<'a, M>, M>(bytes: &'a [u8]) -> Result<S> {
+pub fn from_dcf<'a, S: Deserialize<'a, M>, M>(bytes: &'a [u8]) -> Result<S> {
     let mut dumper = Reader::new(bytes);
     S::collect(&mut dumper)
 }

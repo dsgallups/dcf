@@ -42,10 +42,10 @@ fn main() {
         val_three: "yoyo".to_string(),
         val_four: vec![2, 2, 1, 3],
     };
-    let bytes = dcf::serialize(&simple_struct);
+    let bytes = dcf::to_dcf(&simple_struct);
     println!("bytes:\n{bytes:?}");
 
-    let struct_copy: SimpleStruct = dcf::deserialize(&bytes).unwrap();
+    let struct_copy: SimpleStruct = dcf::from_dcf(&bytes).unwrap();
 
     println!("struct copy:\n{:#?}", struct_copy);
 }
