@@ -1,8 +1,10 @@
+use std::iter;
+
 use crate::*;
 
 impl Serialize for bool {
-    fn dump(self, writer: &mut impl DcfWriter) {
-        writer.insert(&[self as u8]);
+    fn dump(self, writer: &mut Writer) {
+        writer.insert(iter::once(self as u8));
     }
 }
 

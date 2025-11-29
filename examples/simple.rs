@@ -8,7 +8,7 @@ pub struct SimpleStruct {
 }
 
 impl Serialize for SimpleStruct {
-    fn dump(self, writer: &mut impl DcfWriter) {
+    fn dump(self, writer: &mut Writer) {
         self.val_one.dump(writer);
         self.val_two.dump(writer);
         self.val_three.dump(writer);

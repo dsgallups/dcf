@@ -7,7 +7,7 @@ pub(crate) mod utils;
 use crate::*;
 
 pub trait Serialize<M = ()> {
-    fn dump(self, writer: &mut impl DcfWriter);
+    fn dump(self, writer: &mut Writer);
 }
 
 pub trait Deserialize<'a, M = ()> {

@@ -1,22 +1,17 @@
-pub trait DcfWriter {
-    fn insert(&mut self, values: &[u8]);
-}
-
 #[derive(Default)]
-pub struct VecWriter {
+pub struct Writer {
     stack: Vec<u8>,
 }
-impl DcfWriter for VecWriter {
-    fn insert(&mut self, values: &[u8]) {
-        todo!()
-    }
-}
 
-impl VecWriter {
+impl Writer {
     pub fn new(cap: usize) -> Self {
         Self {
             stack: Vec::with_capacity(cap),
         }
+    }
+
+    pub fn insert(&mut self, iter: impl IntoIterator<Item = u8>) {
+        todo!()
     }
 
     // pub fn bool(&mut self, value: bool) {
