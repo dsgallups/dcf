@@ -1,5 +1,6 @@
 use dcf::*;
 
+#[derive(Debug)]
 pub struct SimpleStruct {
     val_one: bool,
     val_two: u32,
@@ -21,12 +22,16 @@ impl<'a> Deserialize<'a> for SimpleStruct {
     where
         Self: Sized,
     {
-        let val_one = reader.dump::<bool>()?;
-        let val_two = reader.dump::<u32>()?;
-        let val_three = reader.dump::<String>()?;
-        let val_four = reader.dump::<Vec<u8>>()?;
-        //let val_four = reader.dump
-        todo!()
+        let val_one = reader.visit::<bool>()?;
+        let val_two = reader.visit::<u32>()?;
+        let val_three = reader.visit::<String>()?;
+        let val_four = reader.visit::<Vec<u8>>()?;
+        Ok(Self {
+            val_one,
+            val_two,
+            val_three,
+            val_four,
+        })
     }
 }
 
@@ -38,6 +43,9 @@ fn main() {
         val_four: vec![2, 2, 1, 3],
     };
     let bytes = dcf::serialize(&simple_struct);
+    println!("bytes:\n{bytes:?}");
 
     let struct_copy: SimpleStruct = dcf::deserialize(&bytes).unwrap();
+
+    println!("struct copy:\n{:#?}", struct_copy);
 }

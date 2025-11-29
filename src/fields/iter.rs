@@ -20,6 +20,15 @@ where
     }
 }
 
+impl<T, M> Serialize<Slice<M>> for Vec<T>
+where
+    T: Serialize<M>,
+{
+    fn serialize(&self, writer: &mut Writer) {
+        self.as_slice().serialize(writer);
+    }
+}
+
 impl<'a, T> Deserialize<'a> for Vec<T>
 where
     T: Deserialize<'a>,
@@ -28,10 +37,10 @@ where
     where
         Self: Sized,
     {
-        let len = reader.dump::<usize>()?;
+        let len = reader.visit::<usize>()?;
         let mut result = Vec::with_capacity(len);
         for _ in 0..len {
-            result.push(reader.dump::<T>()?);
+            result.push(reader.visit::<T>()?);
         }
         Ok(result)
     }

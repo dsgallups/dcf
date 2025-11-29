@@ -20,9 +20,9 @@ impl<'a> Deserialize<'a> for SimpleStruct {
     where
         Self: Sized,
     {
-        let val_one = reader.dump::<bool>()?;
-        let val_two = reader.dump::<u32>()?;
-        let val_three = reader.dump::<String>()?;
+        let val_one = reader.visit::<bool>()?;
+        let val_two = reader.visit::<u32>()?;
+        let val_three = reader.visit::<String>()?;
         Ok(Self {
             val_one,
             val_two,

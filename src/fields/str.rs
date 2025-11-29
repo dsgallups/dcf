@@ -17,7 +17,7 @@ impl<'a> Deserialize<'a> for String {
     where
         Self: Sized,
     {
-        let len = reader.dump::<usize>()?;
+        let len = reader.visit::<usize>()?;
 
         let result = reader.read_exact(len)?;
         let result = String::from_utf8(result.to_vec())?;

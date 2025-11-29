@@ -35,7 +35,7 @@ impl<'a> Reader<'a> {
     /// [`Fields::collect`].
     ///
     /// Useful for reading the proc-macro expansion code.
-    pub fn dump<T: Deserialize<'a>>(&mut self) -> Result<T> {
+    pub fn visit<T: Deserialize<'a>>(&mut self) -> Result<T> {
         T::collect(self)
     }
 }
