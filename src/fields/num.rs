@@ -35,24 +35,17 @@ impl<'a> Deserialize<'a> for i128 {
     }
 }
 
-#[cfg(test)]
-fn test_i128(num: i128) {
-    let varint = serialize(num);
-    let decode: i128 = deserialize(&varint).unwrap();
-
-    assert_eq!(num, decode);
-}
 #[test]
 fn serde_i128() {
-    test_i128(i128::MAX);
-    test_i128(i128::MIN);
-    test_i128(3819012083);
-    test_i128(1239812301847803570212);
-    test_i128(5);
+    utils::test_serde(i128::MAX);
+    utils::test_serde(i128::MIN);
+    utils::test_serde(3819012083i128);
+    utils::test_serde(1239812301847803570212i128);
+    utils::test_serde(5i128);
 }
 
 macro_rules! prim_field {
-    ($prim:ty) => {
+    ($prim:ident) => {
         impl Serialize for $prim {
             fn dump(self, writer: &mut Writer) {
                 (self as i128).dump(writer);
@@ -64,6 +57,16 @@ macro_rules! prim_field {
                 Self: Sized,
             {
                 Ok(i128::collect(reader)? as $prim)
+            }
+        }
+
+        pastey::paste! {
+            #[test]
+            fn  [<serde_ $prim>]() {
+                utils::test_serde($prim::MAX);
+                utils::test_serde($prim::MIN);
+                utils::test_serde(42);
+                utils::test_serde(255);
             }
         }
     };

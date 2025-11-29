@@ -1,3 +1,9 @@
+#[cfg(test)]
+use std::fmt::Debug;
+
+#[cfg(test)]
+use crate::{Deserialize, Serialize};
+
 pub(crate) struct IntEncoder {
     num: u128,
 }
@@ -27,4 +33,14 @@ impl Iterator for IntEncoder {
             Some(res)
         }
     }
+}
+#[cfg(test)]
+pub(crate) fn test_serde<T>(val: T)
+where
+    T: Serialize + for<'a> Deserialize<'a> + Debug + PartialEq + Clone,
+{
+    let varint = crate::serialize(val.clone());
+    let decode: T = crate::deserialize(&varint).unwrap();
+
+    assert_eq!(val, decode);
 }
