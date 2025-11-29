@@ -56,6 +56,9 @@ impl<'a> Reader<'a> {
     }
 
     pub fn dump_packed_bits(&mut self, width: u8) -> Result<u8> {
+        if width == 0 {
+            return Ok(0);
+        }
         if self.bytes.is_empty() || self.cursor == self.bytes.len() {
             bail!("Unexpectend end of buffer");
         }
@@ -91,6 +94,9 @@ impl<'a> Reader<'a> {
         // println!("{} bits remain\n>>", remainder_bits_needed);
         self.bit_cursor = 0;
         self.cursor += 1;
+        if remainder_bits_needed == 0 {
+            return Ok(result);
+        }
         let other_bits = self.dump_packed_bits(remainder_bits_needed)?;
         // println!(">>");
         let ord = result | other_bits;

@@ -82,7 +82,9 @@ impl Writer {
     }
 
     pub fn finish(mut self) -> Vec<u8> {
-        self.stack.push(self.current_byte);
+        if self.bit_cursor > 0 {
+            self.stack.push(self.current_byte);
+        }
         self.stack
     }
 }
