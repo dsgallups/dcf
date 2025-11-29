@@ -1,3 +1,5 @@
+use std::i128;
+
 use crate::{utils::IntEncoder, *};
 
 impl Serialize for i128 {
@@ -33,6 +35,22 @@ impl<'a> Deserialize<'a> for i128 {
         let result = ((zigzag >> 1) as i128) ^ -((zigzag & 1) as i128);
         Ok(result)
     }
+}
+
+#[cfg(test)]
+fn test_i128(num: i128) {
+    let varint = serialize(num);
+    let decode: i128 = deserialize(&varint).unwrap();
+
+    assert_eq!(num, decode);
+}
+#[test]
+fn serde_i128() {
+    test_i128(i128::MAX);
+    test_i128(i128::MIN);
+    test_i128(3819012083);
+    test_i128(1239812301847803570212);
+    test_i128(5);
 }
 
 macro_rules! prim_field {
