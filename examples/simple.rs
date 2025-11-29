@@ -7,7 +7,7 @@ pub struct SimpleStruct {
     val_four: Vec<u8>,
 }
 
-impl<'a> Fields<'a> for SimpleStruct {
+impl<'a> Deserialize<'a> for SimpleStruct {
     fn dump(&self, collector: &mut Writer) {
         self.val_one.dump(collector);
         self.val_two.dump(collector);

@@ -2,7 +2,7 @@ use crate::*;
 
 pub struct StringType;
 
-impl<'a, S> Fields<'a, StringType> for S
+impl<'a, S> Deserialize<'a, StringType> for S
 where
     S: AsRef<str>,
 {

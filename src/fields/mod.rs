@@ -5,9 +5,11 @@ mod str;
 
 use crate::*;
 
-pub trait Fields<'a, M = ()> {
+pub trait Serialize<M = ()> {
     fn dump(&self, collector: &mut Writer);
+}
 
+pub trait Deserialize<'a, M = ()> {
     fn collect(dumper: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,

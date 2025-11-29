@@ -8,7 +8,7 @@ fn encode_int(mut num: u128, bytes: &mut Vec<u8>) {
     bytes.push(num as u8);
 }
 
-impl<'a> Fields<'a> for i128 {
+impl Serialize for i128 {
     fn dump(&self, collector: &mut Writer) {
         let num = *self;
         let mut buf = Vec::new();
@@ -20,6 +20,8 @@ impl<'a> Fields<'a> for i128 {
         encode_int(num, &mut buf);
         collector.insert(&buf);
     }
+}
+impl<'a> Deserialize<'a> for i128 {
     fn collect(dumper: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
@@ -30,11 +32,13 @@ impl<'a> Fields<'a> for i128 {
 
 macro_rules! prim_field {
     ($prim:ty) => {
-        impl<'a> Fields<'a> for $prim {
-            fn dump(&self, collector: &mut Collector) {
+        impl Serialize for $prim {
+            fn dump(&self, collector: &mut Writer) {
                 (*self as i128).dump(collector);
             }
-            fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
+        }
+        impl<'a> Deserialize<'a> for $prim {
+            fn collect(dumper: &mut Reader<'a>) -> Result<Self>
             where
                 Self: Sized,
             {

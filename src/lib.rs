@@ -19,13 +19,13 @@ pub use writer::*;
 
 pub use anyhow::Result;
 
-pub fn serialize<'a, S: Fields<'a>>(value: &S) -> Vec<u8> {
+pub fn serialize<'a, S: Deserialize<'a>>(value: &S) -> Vec<u8> {
     let mut collector = Writer::default();
     value.dump(&mut collector);
     collector.finish()
 }
 
-pub fn deserialize<'a, S: Fields<'a>>(bytes: &'a [u8]) -> Result<S> {
+pub fn deserialize<'a, S: Deserialize<'a>>(bytes: &'a [u8]) -> Result<S> {
     let mut dumper = Reader::new(bytes);
     S::collect(&mut dumper)
 }

@@ -2,10 +2,10 @@ use crate::*;
 
 pub struct IterField;
 
-impl<'a, I, T> Fields<'a, IterField> for I
+impl<I, T> Serialize<IterField> for I
 where
     I: IntoIterator<Item = T>,
-    T: Fields<'a>,
+    T: Serialize,
 {
     fn dump(&self, collector: &mut Writer) {
         collector.arr_start();
