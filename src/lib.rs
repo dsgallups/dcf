@@ -14,6 +14,9 @@ pub use reader::*;
 mod fields;
 pub use fields::*;
 
+mod tiny;
+pub use tiny::*;
+
 mod writer;
 pub use writer::*;
 
