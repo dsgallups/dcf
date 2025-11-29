@@ -13,8 +13,5 @@ pub trait Serialize<M = ()> {
 pub trait Deserialize<'a, M = ()> {
     fn collect(dumper: &mut Reader<'a>) -> Result<Self>
     where
-        Self: Sized,
-    {
-        todo!()
-    }
+        Self: Sized;
 }

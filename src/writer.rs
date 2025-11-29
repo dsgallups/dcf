@@ -12,93 +12,11 @@ impl Writer {
         }
     }
 
-    pub fn push(&mut self, val: u8) -> usize {
-        self.stack.push(val);
-        self.stack.len() - 1
-    }
-    pub fn set(&mut self, index: usize, val: u8) {
-        self.stack[index] = val;
-    }
-
-    // pub fn arr<F>(&mut self, cap: usize, func: F)
-    // where
-    //     F: FnOnce(&mut ArrayWriter),
-    // {
-    //     let mut inner_writer = ArrayWriter {
-    //         len: 0,
-    //         inner: Writer::new(cap),
-    //     };
-    //     func(&mut inner_writer);
-
-    //     self.stack.push(inner_writer.len);
-    //     self.stack.extend(inner_writer.inner);
-    // }
-
     pub fn insert(&mut self, iter: impl IntoIterator<Item = u8>) {
-        todo!()
+        self.stack.extend(iter);
     }
 
-    // pub fn bool(&mut self, value: bool) {
-    //     self.fields.push(FieldValue::Bool(value));
-    // }
-    // pub fn number(&mut self, number: i128) {
-    //     self.fields.push(FieldValue::Number(number))
-    // }
-    // pub fn string(&mut self, val: &str) {
-    //     //ill deal with you later
-    //     let val = val.to_string();
-    //     self.fields.push(FieldValue::String(val.into()))
-    // }
-    // pub fn arr_start(&mut self) {
-    //     self.fields.push(FieldValue::ArrayStart);
-    // }
-    // pub fn arr_end(&mut self) {
-    //     self.fields.push(FieldValue::ArrayEnd);
-    // }
     pub fn finish(self) -> Vec<u8> {
-        todo!()
-        //let mut result = Vec::new();
-
-        // for field in self.fields {
-        //     field.into_bytes(&mut result);
-        // }
-
-        // result
+        self.stack
     }
 }
-
-// enum FieldValue<'a> {
-//     String(Cow<'a, str>),
-//     Bool(bool),
-//     Number(i128),
-//     ArrayStart,
-//     ArrayEnd,
-// }
-
-// impl<'a> FieldValue<'a> {
-//     fn into_bytes(self, bytes: &mut Vec<u8>) {
-//         match self {
-//             FieldValue::Bool(value) => {
-//                 bytes.push(value as u8);
-//             }
-//             FieldValue::Number(num) => {
-//                 // zigzag encoding to preprocess signed values.
-//                 // We could skip this for unsigned values, taking up
-//                 // less space theoretically.
-//                 let num = ((num << 1) ^ (num >> 127)) as u128;
-//                 encode_int(num, bytes);
-//             }
-//             FieldValue::String(val) => {
-//                 encode_int(val.len() as u128, bytes);
-//                 bytes.extend(val.as_bytes());
-//             }
-//             FieldValue::ArrayStart => {
-//                 bytes.push(b'[');
-//             }
-//             FieldValue::ArrayEnd => {
-//                 // we will perform escaping in a bit
-//                 bytes.push(b']');
-//             }
-//         }
-//     }
-// }

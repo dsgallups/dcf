@@ -8,11 +8,6 @@ where
     T: Serialize,
 {
     fn dump(self, writer: &mut Writer) {
-        // let slice: &[T] = self.as_ref();
-
-        // let mut varint = Vec::new();
-        // utils::encode_int(slice.len() as u128, &mut varint);
-
         let iter = self.into_iter();
         let (lb, up) = iter.size_hint();
         let cap = up.unwrap_or(lb) + 1;
@@ -40,12 +35,3 @@ impl ArrayWriter {
         val.dump(&mut self.inner);
     }
 }
-
-// struct IterCollector {
-//     inner: Vec<u8>,
-// }
-// impl DcfWriter for IterCollector {
-//     fn insert(&mut self, values: impl IntoIterator<Item = u8>) {
-//         self.inner.extend(values);
-//     }
-// }
