@@ -28,20 +28,27 @@ impl<'a> Fields<'a> for i128 {
     }
 }
 
-impl<'a> Fields<'a> for u8 {
-    fn dump(&self, collector: &mut Collector) {
-        collector.number(*self as i128);
-    }
-    fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
-    where
-        Self: Sized,
-    {
-        //let byte = dumper.dump::<Self>()?;
-        todo!()
-    }
+macro_rules! prim_field {
+    ($prim:ty) => {
+        impl<'a> Fields<'a> for $prim {
+            fn dump(&self, collector: &mut Collector) {
+                (*self as i128).dump(collector);
+            }
+            fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
+            where
+                Self: Sized,
+            {
+                Ok(i128::collect(dumper)? as $prim)
+            }
+        }
+    };
 }
-impl<'a> Fields<'a> for u32 {
-    fn dump(&self, collector: &mut Collector) {
-        collector.number(*self as i128);
-    }
-}
+prim_field!(u8);
+prim_field!(u16);
+prim_field!(u32);
+prim_field!(u64);
+prim_field!(u128);
+prim_field!(i8);
+prim_field!(i16);
+prim_field!(i32);
+prim_field!(i64);

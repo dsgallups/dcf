@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 #[derive(Default)]
 pub struct Collector {
     fields: Vec<Vec<u8>>,
