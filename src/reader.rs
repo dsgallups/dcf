@@ -2,12 +2,12 @@ use std::io::Cursor;
 
 use crate::*;
 
-pub struct Dumper<'a> {
+pub struct Reader<'a> {
     cursor: usize,
     // this could be a `Read`
     inner: &'a [u8],
 }
-impl<'a> Dumper<'a> {
+impl<'a> Reader<'a> {
     pub fn new(bytes: &'a [u8]) -> Self {
         Self {
             cursor: 0,

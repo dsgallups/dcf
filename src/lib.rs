@@ -8,8 +8,8 @@ A tradeoff design choice:
 
 "#]
 
-mod dumper;
-pub use dumper::*;
+mod reader;
+pub use reader::*;
 
 mod fields;
 pub use fields::*;
@@ -26,6 +26,6 @@ pub fn serialize<'a, S: Fields<'a>>(value: &S) -> Vec<u8> {
 }
 
 pub fn deserialize<'a, S: Fields<'a>>(bytes: &'a [u8]) -> Result<S> {
-    let mut dumper = Dumper::new(bytes);
+    let mut dumper = Reader::new(bytes);
     S::collect(&mut dumper)
 }

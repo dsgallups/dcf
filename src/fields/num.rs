@@ -20,7 +20,7 @@ impl<'a> Fields<'a> for i128 {
         encode_int(num, &mut buf);
         collector.insert(&buf);
     }
-    fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
+    fn collect(dumper: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {

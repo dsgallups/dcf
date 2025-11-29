@@ -4,7 +4,7 @@ impl<'a> Fields<'a> for bool {
     fn dump(&self, collector: &mut Writer) {
         collector.insert(&[*self as u8]);
     }
-    fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
+    fn collect(dumper: &mut Reader<'a>) -> Result<Self>
     where
         Self: Sized,
     {
