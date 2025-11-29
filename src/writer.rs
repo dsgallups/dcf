@@ -1,15 +1,22 @@
+pub trait Writer {
+    fn insert(&mut self, values: &[u8]);
+}
+
 #[derive(Default)]
-pub struct Writer {
+pub struct VecWriter {
     stack: Vec<Vec<u8>>,
 }
-impl Writer {
+impl Writer for VecWriter {
+    fn insert(&mut self, values: &[u8]) {
+        todo!()
+    }
+}
+
+impl VecWriter {
     pub fn new(cap: usize) -> Self {
         Self {
             stack: Vec::with_capacity(cap),
         }
-    }
-    pub fn insert(&mut self, values: &[u8]) {
-        todo!()
     }
 
     // pub fn bool(&mut self, value: bool) {

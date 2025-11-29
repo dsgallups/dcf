@@ -1,7 +1,7 @@
 use crate::*;
 
 impl Serialize for i128 {
-    fn dump(&self, collector: &mut Writer) {
+    fn dump(&self, writer: &mut impl Writer) {
         let num = *self;
         let mut buf = Vec::new();
 
@@ -10,7 +10,7 @@ impl Serialize for i128 {
         // less space theoretically.
         let num = ((num << 1) ^ (num >> 127)) as u128;
         utils::encode_int(num, &mut buf);
-        collector.insert(&buf);
+        writer.insert(&buf);
     }
 }
 impl<'a> Deserialize<'a> for i128 {
@@ -25,8 +25,8 @@ impl<'a> Deserialize<'a> for i128 {
 macro_rules! prim_field {
     ($prim:ty) => {
         impl Serialize for $prim {
-            fn dump(&self, collector: &mut Writer) {
-                (*self as i128).dump(collector);
+            fn dump(&self, writer: &mut impl Writer) {
+                (*self as i128).dump(writer);
             }
         }
         impl<'a> Deserialize<'a> for $prim {

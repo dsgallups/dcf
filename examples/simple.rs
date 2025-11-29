@@ -8,7 +8,7 @@ pub struct SimpleStruct {
 }
 
 impl<'a> Serialize for SimpleStruct {
-    fn dump(&self, collector: &mut Writer) {
+    fn dump(&self, writer: &mut impl Writer) {
         self.val_one.dump(collector);
         self.val_two.dump(collector);
         self.val_three.dump(collector);

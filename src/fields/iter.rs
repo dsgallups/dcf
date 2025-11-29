@@ -7,7 +7,11 @@ where
     I: IntoIterator<Item = T>,
     T: Serialize,
 {
-    fn dump(&self, collector: &mut Writer) {
+    fn dump(&self, writer: &mut impl Writer) {
+        //let mut
+
+        //let mut arr_stack = Vec::new();
+
         todo!()
         // collector.arr_start();
 
