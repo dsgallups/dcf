@@ -24,11 +24,24 @@ impl TinyWriter {
         */
 
         println!(
-            "leading_zeroes: {leading_zeros}, cursor: {}",
-            self.current_bit_cursor
+            "leading_zeros: {}, cursor: {}",
+            leading_zeros, self.current_bit_cursor
         );
-        let shift = leading_zeros as i8 - self.current_bit_cursor as i8;
-        println!("shift: {shift}",);
+        let mut shift = leading_zeros as i8 - self.current_bit_cursor as i8;
+
+        let right_cursor = self.current_bit_cursor + leading_zeros;
+        let remainder = right_cursor.saturating_sub(8);
+        if remainder > 0 {
+            //todo
+        }
+
+        println!(
+            "left_cursor: {}, right_cursor: {}, remainder: {},  shift: {}",
+            8 - right_cursor as i8,
+            right_cursor,
+            remainder,
+            shift
+        );
 
         self.current_bit |= bit << shift;
 
@@ -39,7 +52,7 @@ impl TinyWriter {
         //self.current_bit = ();
 
         println!(
-            "Bit: {bit:08b}\nRes: {:08b}\nCur: {}",
+            "Bit: {bit:08b}\nRes: {:08b}\nCur: {}\n==========",
             self.current_bit, self.current_bit_cursor
         );
         //panic!("leading zeros: {leading_zeros}");
@@ -54,4 +67,9 @@ fn main() {
     w.insert_bitlen(2);
     w.insert_bitlen(1);
     assert_eq!(w.current_bit, 0b1011_0100);
+
+    w.insert_bitlen(0b1011);
+
+    assert_eq!(w.stack[0], 0b1011_0110);
+    assert_eq!(w.current_bit, 0b1100_0000)
 }
