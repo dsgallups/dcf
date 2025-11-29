@@ -20,7 +20,7 @@ impl Iterator for IntEncoder {
             return None;
         }
         if self.num >= 0x80 {
-            let res = self.num as u8 | 0x8;
+            let res = self.num as u8 | 0x80;
             self.num >>= 7;
             Some(res)
         } else {
