@@ -40,6 +40,11 @@ impl SimpleStruct {
         }
     }
 }
+#[test]
+fn test_simple_struct() {
+    let val = SimpleStruct::new(false, 1823, "oiwejoi");
+    test_serde(val);
+}
 
 #[test]
 fn test_simple_structs() {

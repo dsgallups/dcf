@@ -4,7 +4,7 @@ use crate::*;
 
 impl Serialize for bool {
     fn serialize(&self, writer: &mut Writer) {
-        writer.insert(iter::once(*self as u8));
+        writer.insert_packed_byte(*self as u8);
     }
 }
 
@@ -13,6 +13,7 @@ impl<'a> Deserialize<'a> for bool {
     where
         Self: Sized,
     {
-        Ok(reader.read_exact(1)?[0] != 0)
+        let result = reader.dump_packed_byte(1)?;
+        Ok(result != 0)
     }
 }
