@@ -6,7 +6,7 @@ mod str;
 use crate::*;
 
 pub trait Fields<'a, M = ()> {
-    fn dump(&self, collector: &mut Collector<'a>);
+    fn dump(&self, collector: &mut Collector);
 
     fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
     where

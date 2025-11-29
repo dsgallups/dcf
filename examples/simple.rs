@@ -8,7 +8,7 @@ pub struct SimpleStruct {
 }
 
 impl<'a> Fields<'a> for SimpleStruct {
-    fn dump(&self, collector: &mut Collector<'a>) {
+    fn dump(&self, collector: &mut Collector) {
         self.val_one.dump(collector);
         self.val_two.dump(collector);
         self.val_three.dump(collector);

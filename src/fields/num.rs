@@ -9,7 +9,7 @@ fn encode_int(mut num: u128, bytes: &mut Vec<u8>) {
 }
 
 impl<'a> Fields<'a> for i128 {
-    fn dump(&self, collector: &mut Collector<'a>) {
+    fn dump(&self, collector: &mut Collector) {
         let num = *self;
         let mut buf = Vec::new();
 
@@ -29,7 +29,7 @@ impl<'a> Fields<'a> for i128 {
 }
 
 impl<'a> Fields<'a> for u8 {
-    fn dump(&self, collector: &mut Collector<'a>) {
+    fn dump(&self, collector: &mut Collector) {
         collector.number(*self as i128);
     }
     fn collect(dumper: &mut Dumper<'a>) -> Result<Self>
@@ -41,7 +41,7 @@ impl<'a> Fields<'a> for u8 {
     }
 }
 impl<'a> Fields<'a> for u32 {
-    fn dump(&self, collector: &mut Collector<'a>) {
+    fn dump(&self, collector: &mut Collector) {
         collector.number(*self as i128);
     }
 }

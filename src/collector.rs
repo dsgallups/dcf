@@ -1,10 +1,10 @@
 use std::borrow::Cow;
 
 #[derive(Default)]
-pub struct Collector<'a> {
-    fields: Vec<FieldValue<'a>>,
+pub struct Collector {
+    fields: Vec<Vec<u8>>,
 }
-impl<'a> Collector<'a> {
+impl Collector {
     pub fn new(cap: usize) -> Self {
         Self {
             fields: Vec::with_capacity(cap),
@@ -43,38 +43,38 @@ impl<'a> Collector<'a> {
     }
 }
 
-enum FieldValue<'a> {
-    String(Cow<'a, str>),
-    Bool(bool),
-    Number(i128),
-    ArrayStart,
-    ArrayEnd,
-}
+// enum FieldValue<'a> {
+//     String(Cow<'a, str>),
+//     Bool(bool),
+//     Number(i128),
+//     ArrayStart,
+//     ArrayEnd,
+// }
 
-impl<'a> FieldValue<'a> {
-    fn into_bytes(self, bytes: &mut Vec<u8>) {
-        match self {
-            FieldValue::Bool(value) => {
-                bytes.push(value as u8);
-            }
-            FieldValue::Number(num) => {
-                // zigzag encoding to preprocess signed values.
-                // We could skip this for unsigned values, taking up
-                // less space theoretically.
-                let num = ((num << 1) ^ (num >> 127)) as u128;
-                encode_int(num, bytes);
-            }
-            FieldValue::String(val) => {
-                encode_int(val.len() as u128, bytes);
-                bytes.extend(val.as_bytes());
-            }
-            FieldValue::ArrayStart => {
-                bytes.push(b'[');
-            }
-            FieldValue::ArrayEnd => {
-                // we will perform escaping in a bit
-                bytes.push(b']');
-            }
-        }
-    }
-}
+// impl<'a> FieldValue<'a> {
+//     fn into_bytes(self, bytes: &mut Vec<u8>) {
+//         match self {
+//             FieldValue::Bool(value) => {
+//                 bytes.push(value as u8);
+//             }
+//             FieldValue::Number(num) => {
+//                 // zigzag encoding to preprocess signed values.
+//                 // We could skip this for unsigned values, taking up
+//                 // less space theoretically.
+//                 let num = ((num << 1) ^ (num >> 127)) as u128;
+//                 encode_int(num, bytes);
+//             }
+//             FieldValue::String(val) => {
+//                 encode_int(val.len() as u128, bytes);
+//                 bytes.extend(val.as_bytes());
+//             }
+//             FieldValue::ArrayStart => {
+//                 bytes.push(b'[');
+//             }
+//             FieldValue::ArrayEnd => {
+//                 // we will perform escaping in a bit
+//                 bytes.push(b']');
+//             }
+//         }
+//     }
+// }
