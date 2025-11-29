@@ -34,6 +34,7 @@ impl Iterator for IntEncoder {
         }
     }
 }
+
 #[cfg(test)]
 pub fn test_serde<T, M1, M2>(val: T)
 where

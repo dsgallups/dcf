@@ -1,10 +1,9 @@
-use std::iter;
-
 use crate::*;
 
 impl Serialize for bool {
     fn serialize(&self, writer: &mut Writer) {
-        writer.insert(iter::once(*self as u8));
+        println!("inserting packed bool: {}", *self);
+        writer.insert_packed_byte(*self as u8);
     }
 }
 
@@ -13,6 +12,8 @@ impl<'a> Deserialize<'a> for bool {
     where
         Self: Sized,
     {
-        Ok(reader.read_exact(1)?[0] != 0)
+        let result = reader.dump_packed_bits(1)?;
+        println!("bool result: {result}");
+        Ok(result != 0)
     }
 }
